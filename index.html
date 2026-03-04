@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>QRU Communications — Instagram Carousel</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&family=Dancing+Script:wght@400;500&family=Jost:wght@200;300;400;500&display=swap" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --brown: #8B5E3C;
+  --brown-light: #A67C5B;
+  --brown-pale: #C4956A;
+  --cream: #FAF7F4;
+  --warm-grey: #EEEBE6;
+  --warm-white: #F5F2EE;
+  --text-dark: #2C1F14;
+  --text-mid: #6B4C35;
+  --text-soft: #9E8070;
+  --nude: #E8DDD4;
+}
+
+body {
+  background: #EDEBE8;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Jost', sans-serif;
+  padding: 40px 20px;
+  gap: 28px;
+}
+
+/* ─── PHONE FRAME ─── */
+.phone {
+  width: 375px;
+  background: #fff;
+  border-radius: 44px;
+  overflow: hidden;
+  box-shadow:
+    0 2px 6px rgba(0,0,0,0.06),
+    0 20px 60px rgba(0,0,0,0.14),
+    0 0 0 1px rgba(0,0,0,0.04);
+}
+
+.phone-bar {
+  background: #fff;
+  padding: 14px 24px 8px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.phone-time { font-size: 12px; color: #111; font-weight: 600; font-family: 'Jost', sans-serif; }
+.phone-icons { font-size: 11px; color: #111; display: flex; gap: 4px; align-items: center; }
+
+/* ─── IG HEADER ─── */
+.ig-header {
+  background: #fff;
+  padding: 8px 14px 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border-bottom: 1px solid #F0EDEA;
+}
+
+.avatar {
+  width: 34px; height: 34px;
+  border-radius: 50%;
+  background: var(--warm-grey);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  overflow: hidden;
+  border: 1.5px solid var(--brown-pale);
+  position: relative;
+}
+
+.avatar-inner {
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  width: 100%; height: 100%;
+  background: var(--warm-grey);
+}
+
+.avatar-qru {
+  font-family: 'Playfair Display', serif;
+  font-weight: 900;
+  font-size: 10px;
+  color: #fff;
+  line-height: 1;
+  letter-spacing: -0.5px;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+}
+
+.avatar-script {
+  font-family: 'Dancing Script', cursive;
+  font-size: 5.5px;
+  color: var(--brown);
+  line-height: 1;
+  margin-top: 0px;
+}
+
+.ig-user { flex: 1; }
+.ig-user .handle { font-size: 12.5px; font-weight: 600; color: #111; font-family: 'Jost', sans-serif; }
+.ig-user .location { font-size: 10px; color: #999; font-weight: 300; }
+.ig-more { color: #555; font-size: 16px; letter-spacing: 1px; line-height: 1; }
+
+/* ─── CAROUSEL ─── */
+.carousel-wrapper {
+  position: relative;
+  width: 375px;
+  height: 375px;
+  overflow: hidden;
+}
+
+.slides-track {
+  display: flex;
+  width: calc(375px * 5);
+  height: 375px;
+  transition: transform 0.55s cubic-bezier(0.77, 0, 0.18, 1);
+}
+
+/* ─── BASE SLIDE ─── */
+.slide {
+  width: 375px;
+  height: 375px;
+  flex-shrink: 0;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 34px 30px;
+  text-align: center;
+}
+
+/* ─── SLIDE 1 — HOOK ─── */
+.slide-1 {
+  background: var(--cream);
+}
+
+.s1-texture {
+  position: absolute; inset: 0;
+  background-image:
+    radial-gradient(circle at 80% 20%, rgba(139,94,60,0.06) 0%, transparent 50%),
+    radial-gradient(circle at 10% 80%, rgba(139,94,60,0.04) 0%, transparent 40%);
+}
+
+.s1-top-line {
+  position: absolute;
+  top: 24px; left: 30px; right: 30px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--brown-pale), transparent);
+  opacity: 0.5;
+}
+
+.s1-bottom-line {
+  position: absolute;
+  bottom: 30px; left: 30px; right: 30px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--brown-pale), transparent);
+  opacity: 0.5;
+}
+
+.s1-tag {
+  font-family: 'Dancing Script', cursive;
+  font-size: 15px;
+  color: var(--brown-light);
+  font-weight: 400;
+  margin-bottom: 16px;
+  position: relative; z-index: 1;
+}
+
+.s1-headline {
+  font-family: 'Playfair Display', serif;
+  font-size: 38px;
+  font-weight: 500;
+  color: var(--text-dark);
+  line-height: 1.15;
+  margin-bottom: 14px;
+  position: relative; z-index: 1;
+}
+
+.s1-headline em {
+  font-style: italic;
+  color: var(--brown);
+}
+
+.s1-sub {
+  font-size: 11px;
+  font-weight: 300;
+  color: var(--text-soft);
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  position: relative; z-index: 1;
+}
+
+.s1-logo-watermark {
+  position: absolute;
+  bottom: 38px;
+  right: 28px;
+  text-align: right;
+  z-index: 1;
+}
+
+.s1-logo-watermark .wm-qru {
+  font-family: 'Playfair Display', serif;
+  font-size: 18px;
+  font-weight: 500;
+  color: rgba(44,31,20,0.12);
+  line-height: 1;
+  letter-spacing: -1px;
+}
+
+.s1-logo-watermark .wm-comm {
+  font-family: 'Dancing Script', cursive;
+  font-size: 10px;
+  color: rgba(139,94,60,0.2);
+  line-height: 1;
+}
+
+.swipe-arrow {
+  position: absolute;
+  bottom: 38px; left: 28px;
+  font-size: 10px;
+  color: var(--brown-pale);
+  letter-spacing: 1.5px;
+  z-index: 1;
+  display: flex; align-items: center; gap: 5px;
+}
+
+/* ─── PAIN SLIDES (2,3,4) ─── */
+.slide-pain {
+  background: var(--warm-white);
+  align-items: flex-start;
+  text-align: left;
+}
+
+.slide-2 { background: #FAF7F4; }
+.slide-3 { background: #F7F3EF; }
+.slide-4 { background: #FAF7F4; }
+
+.pain-bg-num {
+  position: absolute;
+  top: -10px; right: 14px;
+  font-family: 'Playfair Display', serif;
+  font-size: 120px;
+  font-weight: 400;
+  color: rgba(139,94,60,0.055);
+  line-height: 1;
+  pointer-events: none;
+}
+
+.pain-left-bar {
+  position: absolute;
+  left: 0; top: 30px; bottom: 30px;
+  width: 2px;
+  background: linear-gradient(180deg, transparent, var(--brown-pale), transparent);
+}
+
+.pain-content {
+  position: relative; z-index: 1;
+  width: 100%;
+  padding: 0 6px;
+}
+
+.pain-label {
+  font-family: 'Dancing Script', cursive;
+  font-size: 16px;
+  color: var(--brown-light);
+  font-weight: 400;
+  margin-bottom: 12px;
+  display: block;
+}
+
+.pain-headline {
+  font-family: 'Playfair Display', serif;
+  font-size: 30px;
+  font-weight: 500;
+  color: var(--text-dark);
+  line-height: 1.25;
+  margin-bottom: 14px;
+}
+
+.pain-headline em {
+  font-style: italic;
+  color: var(--brown);
+}
+
+.pain-body {
+  font-size: 12.5px;
+  color: var(--text-mid);
+  line-height: 1.75;
+  font-weight: 300;
+  margin-bottom: 18px;
+}
+
+.pain-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border: 1px solid rgba(139,94,60,0.25);
+  padding: 6px 14px;
+  font-size: 10.5px;
+  color: var(--brown);
+  font-weight: 300;
+  letter-spacing: 1px;
+  background: rgba(139,94,60,0.03);
+}
+
+.pain-corner-logo {
+  position: absolute;
+  top: 18px; right: 22px;
+  text-align: right;
+  z-index: 1;
+}
+
+.pcl-qru {
+  font-family: 'Playfair Display', serif;
+  font-size: 14px;
+  font-weight: 500;
+  color: rgba(44,31,20,0.15);
+  line-height: 1;
+  letter-spacing: -0.5px;
+}
+
+.pcl-comm {
+  font-family: 'Dancing Script', cursive;
+  font-size: 8px;
+  color: rgba(139,94,60,0.3);
+  line-height: 1;
+}
+
+/* ─── SLIDE 5 — CTA ─── */
+.slide-5 {
+  background: var(--warm-grey);
+  position: relative;
+  overflow: hidden;
+}
+
+.s5-bg-circle {
+  position: absolute;
+  width: 320px; height: 320px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(139,94,60,0.07) 0%, transparent 70%);
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.s5-lines {
+  position: absolute;
+  top: 24px; left: 30px; right: 30px;
+  display: flex; flex-direction: column; gap: 4px;
+}
+
+.s5-line {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(139,94,60,0.2), transparent);
+}
+
+.s5-lines-bot {
+  position: absolute;
+  bottom: 24px; left: 30px; right: 30px;
+  display: flex; flex-direction: column; gap: 4px;
+}
+
+.s5-logo-qru {
+  font-family: 'Playfair Display', serif;
+  font-size: 64px;
+  font-weight: 400;
+  color: #fff;
+  line-height: 1;
+  letter-spacing: 2px;
+  text-shadow: 0 2px 20px rgba(139,94,60,0.12);
+  position: relative; z-index: 1;
+  margin-bottom: 2px;
+}
+
+.s5-logo-script {
+  font-family: 'Dancing Script', cursive;
+  font-size: 22px;
+  font-weight: 400;
+  color: var(--brown);
+  position: relative; z-index: 1;
+  margin-bottom: 24px;
+}
+
+.s5-tagline {
+  font-family: 'Playfair Display', serif;
+  font-size: 17px;
+  font-weight: 400;
+  font-style: italic;
+  color: var(--text-dark);
+  line-height: 1.5;
+  max-width: 260px;
+  text-align: center;
+  position: relative; z-index: 1;
+  margin-bottom: 22px;
+}
+
+.s5-cta {
+  background: var(--brown);
+  color: #fff;
+  padding: 11px 28px;
+  font-size: 10.5px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  font-weight: 400;
+  font-family: 'Jost', sans-serif;
+  position: relative; z-index: 1;
+  border: none;
+}
+
+.s5-handle {
+  position: absolute;
+  bottom: 36px;
+  font-size: 10px;
+  color: var(--text-soft);
+  letter-spacing: 2px;
+  z-index: 1;
+  font-weight: 400;
+}
+
+/* ─── DOTS ─── */
+.dot-row {
+  position: absolute;
+  bottom: 10px; left: 50%;
+  transform: translateX(-50%);
+  display: flex; gap: 5px;
+  z-index: 10;
+}
+
+.dot {
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: rgba(139,94,60,0.3);
+  transition: all 0.3s;
+}
+
+.dot.active {
+  background: var(--brown);
+  width: 14px;
+  border-radius: 3px;
+}
+
+.arrow {
+  position: absolute;
+  top: 50%; transform: translateY(-50%);
+  z-index: 20;
+  background: rgba(255,255,255,0.75);
+  border: 1px solid rgba(139,94,60,0.15);
+  color: var(--brown);
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 14px;
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.2s;
+  backdrop-filter: blur(4px);
+  user-select: none;
+}
+.arrow:hover { background: var(--brown); color: #fff; }
+.arrow-left { left: 8px; }
+.arrow-right { right: 8px; }
+
+/* ─── IG ACTIONS ─── */
+.ig-actions {
+  background: #fff;
+  padding: 11px 14px 8px;
+  border-top: 1px solid #F0EDEA;
+}
+
+.action-row {
+  display: flex; align-items: center; gap: 12px;
+  margin-bottom: 8px;
+}
+
+.action-icon {
+  font-size: 21px; cursor: pointer;
+  transition: transform 0.18s;
+  line-height: 1;
+}
+.action-icon:hover { transform: scale(1.15); }
+.spacer { flex: 1; }
+
+.likes {
+  font-size: 12px; font-weight: 600; color: #111;
+  margin-bottom: 4px; font-family: 'Jost', sans-serif;
+}
+
+.caption-preview {
+  font-size: 12px; color: #444; line-height: 1.55;
+  font-family: 'Jost', sans-serif; font-weight: 300;
+}
+.caption-preview strong { color: #111; font-weight: 600; }
+.caption-preview .more { color: #999; }
+
+.comments { font-size: 11px; color: #aaa; margin-top: 4px; }
+.timestamp {
+  font-size: 9px; color: #ccc; text-transform: uppercase;
+  letter-spacing: 1px; margin-top: 4px; padding-bottom: 4px;
+}
+
+/* ─── CONTROLS ─── */
+.slide-controls {
+  display: flex; gap: 6px; align-items: center;
+  flex-wrap: wrap; justify-content: center;
+}
+
+.slide-btn {
+  background: transparent;
+  border: 1px solid rgba(139,94,60,0.25);
+  color: var(--text-soft);
+  padding: 7px 16px;
+  font-family: 'Jost', sans-serif;
+  font-size: 10px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.25s;
+  border-radius: 2px;
+}
+
+.slide-btn:hover, .slide-btn.active {
+  background: var(--brown);
+  border-color: var(--brown);
+  color: #fff;
+}
+
+.slide-label-text {
+  font-size: 10px;
+  color: #B0A090;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  text-align: center;
+  font-family: 'Jost', sans-serif;
+}
+</style>
+</head>
+<body>
+
+<div class="slide-label-text">QRU Communications · Instagram Carousel Preview</div>
+
+<!-- PHONE -->
+<div class="phone">
+
+  <!-- STATUS BAR -->
+  <div class="phone-bar">
+    <span class="phone-time">9:41</span>
+    <span class="phone-icons">▲▲▲ WiFi 🔋</span>
+  </div>
+
+  <!-- IG HEADER -->
+  <div class="ig-header">
+    <div class="avatar">
+      <div class="avatar-inner">
+        <span class="avatar-qru" style="color:#2C1F14; font-size:11px;">QRU</span>
+        <span class="avatar-script">Communications</span>
+      </div>
+    </div>
+    <div class="ig-user">
+      <div class="handle">qru_communications</div>
+      <div class="location">Dubai, UAE</div>
+    </div>
+    <div class="ig-more">···</div>
+  </div>
+
+  <!-- CAROUSEL -->
+  <div class="carousel-wrapper">
+    <div class="slides-track" id="track">
+
+      <!-- SLIDE 1 — HOOK -->
+      <div class="slide slide-1">
+        <div class="s1-texture"></div>
+        <div class="s1-top-line"></div>
+        <div class="s1-bottom-line"></div>
+
+        <div class="s1-tag">Executive Communications</div>
+        <div class="s1-headline">
+          Great Leaders<br>Build Legacies Worth<br><em>Talking About</em>
+        </div>
+        <div class="s1-sub">Here's how the best make their mark →</div>
+
+        <div class="s1-logo-watermark">
+          <div class="wm-qru">QRU</div>
+          <div class="wm-comm">Communications</div>
+        </div>
+        <div class="swipe-arrow">Swipe ›</div>
+      </div>
+
+      <!-- SLIDE 2 — PAIN 1 -->
+      <div class="slide slide-pain slide-2">
+        <div class="pain-bg-num">01</div>
+        <div class="pain-left-bar"></div>
+        <div class="pain-corner-logo">
+          <div class="pcl-qru">QRU</div>
+          <div class="pcl-comm">Communications</div>
+        </div>
+        <div class="pain-content">
+          <span class="pain-label">Pillar #1</span>
+          <div class="pain-headline">A strong digital presence<br>turns visibility into <em>opportunity.</em></div>
+          <p class="pain-body">When your online presence truly reflects the quality of your work, every scroll becomes a warm introduction. Senior decision-makers choose partners they already trust — and trust is built long before the first meeting.</p>
+          <div class="pain-pill">↳ Be seen as you truly are.</div>
+        </div>
+      </div>
+
+      <!-- SLIDE 3 — PAIN 2 -->
+      <div class="slide slide-pain slide-3">
+        <div class="pain-bg-num">02</div>
+        <div class="pain-left-bar"></div>
+        <div class="pain-corner-logo">
+          <div class="pcl-qru">QRU</div>
+          <div class="pcl-comm">Communications</div>
+        </div>
+        <div class="pain-content">
+          <span class="pain-label">Pillar #2</span>
+          <div class="pain-headline">Consistent messaging builds<br>the <em>authority</em> clients seek.</div>
+          <p class="pain-body">The leaders who attract premium partnerships are those who communicate with clarity and intention across every platform. A unified voice signals confidence — and confident brands inspire confidence in others.</p>
+          <div class="pain-pill">↳ Clarity creates credibility.</div>
+        </div>
+      </div>
+
+      <!-- SLIDE 4 — PAIN 3 -->
+      <div class="slide slide-pain slide-4">
+        <div class="pain-bg-num">03</div>
+        <div class="pain-left-bar"></div>
+        <div class="pain-corner-logo">
+          <div class="pcl-qru">QRU</div>
+          <div class="pcl-comm">Communications</div>
+        </div>
+        <div class="pain-content">
+          <span class="pain-label">Pillar #3</span>
+          <div class="pain-headline">Thought leaders who own their narrative<br><em>shape</em> their industry.</div>
+          <p class="pain-body">The most influential executives don't wait to be discovered — they define the conversation. When your story is told with intention, boardroom invitations, speaking platforms, and strategic partnerships follow naturally.</p>
+          <div class="pain-pill">↳ Own your narrative. Lead your field.</div>
+        </div>
+      </div>
+
+      <!-- SLIDE 5 — CTA -->
+      <div class="slide slide-5">
+        <div class="s5-bg-circle"></div>
+        <div class="s5-lines">
+          <div class="s5-line"></div>
+          <div class="s5-line" style="opacity:0.5"></div>
+        </div>
+        <div class="s5-lines-bot">
+          <div class="s5-line" style="opacity:0.5"></div>
+          <div class="s5-line"></div>
+        </div>
+
+        <div class="s5-logo-qru">QRU</div>
+        <div class="s5-logo-script">Communications</div>
+        <div class="s5-tagline">"We help exceptional leaders build the presence their vision deserves."</div>
+        <div class="s5-cta">Book a Strategy Call</div>
+        <div class="s5-handle">@qru_communications</div>
+      </div>
+
+    </div>
+
+    <!-- ARROWS -->
+    <div class="arrow arrow-left" onclick="prevSlide()">‹</div>
+    <div class="arrow arrow-right" onclick="nextSlide()">›</div>
+
+    <!-- DOTS -->
+    <div class="dot-row" id="dots">
+      <div class="dot active"></div>
+      <div class="dot"></div>
+      <div class="dot"></div>
+      <div class="dot"></div>
+      <div class="dot"></div>
+    </div>
+  </div>
+
+  <!-- IG ACTIONS -->
+  <div class="ig-actions">
+    <div class="action-row">
+      <span class="action-icon" id="heart" onclick="toggleHeart()">🤍</span>
+      <span class="action-icon">💬</span>
+      <span class="action-icon">📤</span>
+      <span class="spacer"></span>
+      <span class="action-icon">🔖</span>
+    </div>
+    <div class="likes" id="likeCount">1,247 likes</div>
+    <div class="caption-preview">
+      <strong>qru_communications</strong> The world's most influential leaders share one thing in common — a presence that speaks before they do. Swipe to discover the three pillars of executive communication that elevate great careers into lasting legacies. <span class="more">more</span>
+    </div>
+    <div class="comments">View all 89 comments</div>
+    <div class="timestamp">2 hours ago</div>
+  </div>
+</div>
+
+<!-- SLIDE NAV BUTTONS -->
+<div class="slide-controls">
+  <button class="slide-btn active" onclick="goTo(0)">Cover</button>
+  <button class="slide-btn" onclick="goTo(1)">Pillar 1</button>
+  <button class="slide-btn" onclick="goTo(2)">Pillar 2</button>
+  <button class="slide-btn" onclick="goTo(3)">Pillar 3</button>
+  <button class="slide-btn" onclick="goTo(4)">CTA</button>
+</div>
+
+<div class="slide-label-text" id="slideLabel">Slide 1 of 5</div>
+
+<script>
+let current = 0;
+const total = 5;
+let liked = false;
+let likes = 1247;
+
+function update() {
+  document.getElementById('track').style.transform = `translateX(-${current * 375}px)`;
+  document.querySelectorAll('.dot').forEach((d,i) => d.classList.toggle('active', i === current));
+  document.querySelectorAll('.slide-btn').forEach((b,i) => b.classList.toggle('active', i === current));
+  document.getElementById('slideLabel').textContent = `Slide ${current + 1} of ${total}`;
+}
+
+function nextSlide() { if (current < total - 1) { current++; update(); } }
+function prevSlide() { if (current > 0) { current--; update(); } }
+function goTo(n) { current = n; update(); }
+
+function toggleHeart() {
+  liked = !liked;
+  document.getElementById('heart').textContent = liked ? '❤️' : '🤍';
+  likes += liked ? 1 : -1;
+  document.getElementById('likeCount').textContent = likes.toLocaleString() + ' likes';
+}
+
+// Touch swipe
+let startX = 0;
+const wrapper = document.querySelector('.carousel-wrapper');
+wrapper.addEventListener('touchstart', e => startX = e.touches[0].clientX);
+wrapper.addEventListener('touchend', e => {
+  const diff = startX - e.changedTouches[0].clientX;
+  if (diff > 40) nextSlide();
+  else if (diff < -40) prevSlide();
+});
+
+// Keyboard
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight') nextSlide();
+  if (e.key === 'ArrowLeft') prevSlide();
+});
+</script>
+</body>
+</html>
